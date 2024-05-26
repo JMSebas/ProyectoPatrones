@@ -15,19 +15,23 @@ datasource db {
 
 model User {
   id         Int      @id @default(autoincrement()) @map("id")
-  firstName  String   @map("first_name")
-  lastName   String   @map("last_name")
-  address    String?  @map("address")
-  phone      String?  @map("phone")
-  roleId     Int      @map("role_id")
-  role       Role     @relation(fields: [roleId], references: [id])
-
+  // firstName  String   @map("first_name")
+  // lastName   String   @map("last_name")
+  email      String   @unique @map("email")
+  hashedPassword String 
+  // address    String?  @map("address")
+  // phone      String?  @map("phone")
+  // roleId     Int      @map("role_id")
+  // role       Role     @relation(fields: [roleId], references: [id])
+  createdAt DateTime @default(now())
+  updateAt DateTime @updatedAt()
   @@map("users")
 }
 
-model Role {
-  id    Int      @id @default(autoincrement()) @map("id")
-  name  String   @map("name")
-   users User[]   
-  @@map("roles")
-}
+// model Role {
+//   id    Int      @id @default(autoincrement()) @map("id")
+//   name  String   @map("name")
+//   //  users User[]   
+//   @@map("roles")
+// }
+
