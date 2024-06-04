@@ -1,0 +1,253 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Person {
+  id             Int      @id @default(autoincrement()) @map("id")
+  dni            String   @unique @map("dni")
+  firstName      String   @map("first_name")
+  secondName     String   @map("second_name")
+  lastName       String   @map("lastname")
+  secondLastName String   @map("second_lastname")
+  gender         String   @map("gender")
+  email          String   @map("email")
+  address        String?  @map("address")
+  phone          String?  @map("phone")
+  birthDate      DateTime @map("birth_date")
+  createdAt      DateTime @default(now())
+  updateAt       DateTime @updatedAt()
+
+  locationId Int      
+  location   Location @relation(fields: [locationId], references: [id])
+
+  employee Employee?
+  consumer Consumer?
+}
+
+//type tipo & parent_location_id tipo (circular)?
+model Location {
+  id        Int      @id @default(autoincrement()) @map("id")
+  name      String   @map("name")
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt()
+
+  persons Person[]
+}
+
+model Employee {
+  id             Int      @id @default(autoincrement()) @map("id")
+  username       String   @unique @map("username")
+  hashedPassword String
+  role           String   @map("role")
+  isActive       Boolean
+  createdAt      DateTime @default(now())
+  updateAt       DateTime @updatedAt()
+
+  personId Int    @unique
+  person   Person @relation(fields: [personId], references: [id])
+
+  permissions Permission[]
+  quotas      Quota[]
+  delegations Delegation[]
+}
+
+model Permission {
+  id         Int      @id @default(autoincrement())
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  moduleId Int
+  module   Module @relation(fields: [moduleId], references: [id])
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt()
+}
+
+//Description String? or int
+model Module {
+  id          Int      @id @default(autoincrement())
+  description String  
+  name        String
+  createdAt   DateTime @default(now())
+  updateAt    DateTime @updatedAt()
+
+  permissions Permission[]
+}
+
+model Quota {
+  id        Int      @id @default(autoincrement())
+  startDate DateTime
+  endDate   DateTime
+  amout     Decimal
+  comission String
+  achieved  String
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt()
+
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+}
+
+model Consumer {
+  id         Int      @id @default(autoincrement())
+  type       String
+  isCustomer Boolean
+  createdAt  DateTime @default(now())
+  updateAt   DateTime @updatedAt()
+
+  personId Int    @unique
+  person   Person @relation(fields: [personId], references: [id])
+
+  delegations Delegation[]
+}
+
+
+model PaymentMethod {
+  id        Int      @id @default(autoincrement())
+  name      String
+  taxes     Decimal
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt()
+
+  transactions Transaction[]
+}
+
+model Transaction {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  status    String
+  total     Decimal
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt()
+
+
+  paymentMethodId Int
+  paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+  delegationId    Int
+  delegation      Delegation    @relation(fields: [delegationId], references: [id])
+
+  items Item[]
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt()
+
+  products Product[]
+}
+
+model Brand {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt()
+
+  products Product[]
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  stock       Int
+  price       Decimal
+  description String
+  createdAt   DateTime @default(now())
+  updateAt    DateTime @updatedAt()
+
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  brandId Int
+  brand   Brand @relation(fields: [brandId], references: [id])
+
+  items Item[]
+}
+
+model Item {
+  id        Int      @id @default(autoincrement())
+  discount  Decimal
+  quantity  Int
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt()
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+
+  serviceId Int
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  transactionId Int
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+}
+
+model Service {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  isAvaliable Boolean
+  priceHour   Decimal
+  createdAt   DateTime @default(now())
+  updateAt    DateTime @updatedAt()
+
+  items Item[]
+}
+
+model Delegation {
+  id Int @id @default(autoincrement())
+
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  consumerId Int
+  consumer   Consumer @relation(fields: [consumerId], references: [id])
+
+  tasks        Task[]
+  transactions Transaction[]
+  chances      Chance[]
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt()
+}
+
+model Chance {
+  id        Int      @id @default(autoincrement())
+  amount    String
+  status    String
+  date      DateTime
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt()
+
+  delegationId Int
+  delegation   Delegation @relation(fields: [delegationId], references: [id])
+}
+
+model Task {
+  id            Int      @id @default(autoincrement())
+  date          DateTime
+  state         String
+  type          String
+  estimatedTime DateTime
+  createdAt     DateTime @default(now())
+  updateAt      DateTime @updatedAt()
+
+  delegationId Int
+  delegation   Delegation @relation(fields: [delegationId], references: [id])
+  comments     Comment[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt()
+
+  taskId Int
+  task   Task @relation(fields: [taskId], references: [id])
+}
