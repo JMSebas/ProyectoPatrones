@@ -1,27 +1,24 @@
-import { IsEmail, IsNotEmpty, IsString, Length, IsInt, Min } from "class-validator";
-
+import { IsBoolean, IsNotEmpty, IsString, Length, IsInt, Min } from "class-validator";
 
 export class AuthDto {
     @IsNotEmpty()
     @IsString()
-    public firstName: string;
+    public username: string;
 
     @IsNotEmpty()
     @IsString()
-    public lastName: string;
-
-   
-    @IsEmail()
-    public email: string;
-
-
-
-    @IsNotEmpty()
-    @IsString()
-    @Length(3, 20, {message: 'Password has to be at between 3 and 20 chars'})
+    @Length(3, 20, { message: 'Password has to be between 3 and 20 characters' })
     public password: string;
+
+
+    @IsNotEmpty()
+    @IsString()
+    public role: string;
+
+    @IsBoolean()
+    public isActive: boolean;
 
     @IsInt()
     @Min(1, { message: 'Role ID must be a positive integer' })
-    public roleId: number;
+    public personId: number;
 }
