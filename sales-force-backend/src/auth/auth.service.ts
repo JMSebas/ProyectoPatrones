@@ -85,7 +85,7 @@ export class AuthService {
         return await bcrypt.compare(args.password, args.hash)
     }
 
-    async signToken(args: { id: number, username: string, role: string }) {
+    async signToken(args: { id: number; username: string; role: string }) {
         const payload = args
         return this.jwt.signAsync(payload, { secret: jwtSecret })
     }
