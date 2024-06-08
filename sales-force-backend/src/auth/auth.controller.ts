@@ -29,7 +29,7 @@ export class AuthController {
 
   @UseGuards(RolesGuard)
   @Get('admin')
-  @Roles('admin') 
+  @Roles('admin, user') 
   getAdminData() {
     return 'This data is only for admins';
   }
@@ -40,6 +40,15 @@ export class AuthController {
   getUserData() {
     return 'This data is only for users';
   }
+
+  
+  @UseGuards(RolesGuard)
+  @Post('admin1')
+  @Roles('admin') 
+  postUserData() {
+    return 'post usado por admins';
+  }
+
 
 }
 

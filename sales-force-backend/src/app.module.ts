@@ -5,7 +5,7 @@ import { Module } from '@nestjs/common';
 // import { PrismaService } from './prisma/prisma.service';
 // import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
-import { PrismaModule } from './prisma/prisma.module';
+import { PrismaModule } from './infraestructura/prisma/prisma.module';
 import { PersonModule } from './modules/person/person.module';
 import { EmployeeModule } from './modules/employee/employee.module';
 import { LocationModule } from './modules/location/location.module';
