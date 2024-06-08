@@ -2,7 +2,8 @@ import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 import { SigninDto } from './dto/signin.dto';
-import { RoleGuard } from './guard/roles.guard';
+import { Roles } from './guard/role.decorator';
+import { RolesGuard } from './guard/roles.guard';
 
 
 @Controller('auth')
@@ -19,22 +20,35 @@ export class AuthController {
     return this.authService.signin(dto, req, res)
   }
 
+  
 
   @Get('signout')
   signout(@Req() req, @Res() res) {
     return this.authService.signout(req, res)
   }
 
-  @UseGuards(RoleGuard)
-  @Get('resour')
-  mensaje() {
-    return "usuario"
+  @UseGuards(RolesGuard)
+  @Get('admin')
+  @Roles('admin, user') 
+  getAdminData() {
+    return 'This data is only for admins';
   }
-//1234
+
+  @UseGuards(RolesGuard)
+  @Get('user')
+  @Roles('user') 
+  getUserData() {
+    return 'This data is only for users';
+  }
+
   
-  @Get('resource')
-  mensaje2() {
-    return "admin"
+  @UseGuards(RolesGuard)
+  @Post('admin1')
+  @Roles('admin') 
+  postUserData() {
+    return 'post usado por admins';
   }
+
+
 }
 
