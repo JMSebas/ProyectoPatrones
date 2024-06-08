@@ -5,25 +5,8 @@ import { Module } from '@nestjs/common';
 // import { PrismaService } from './prisma/prisma.service';
 // import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
-import { PrismaModule } from './infraestructura/prisma/prisma.module';
-import { PersonModule } from './modules/person/person.module';
-import { EmployeeModule } from './modules/employee/employee.module';
-import { LocationModule } from './modules/location/location.module';
-import { ConsumerModule } from './modules/consumer/consumer.module';
-import { PermissionModule } from './modules/permission/permission.module';
-import { ModuleModule } from './modules/module/module.module';
-import { QuotaModule } from './modules/quota/quota.module';
-import { PaymentMethodModule } from './modules/payment-method/payment-method.module';
-import { TransactionModule } from './modules/transaction/transaction.module';
-import { CategoryModule } from './modules/category/category.module';
-import { BrandModule } from './modules/brand/brand.module';
-import { ProductModule } from './modules/product/product.module';
-import { ItemModule } from './modules/item/item.module';
-import { ServiceModule } from './modules/service/service.module';
-import { DelegationModule } from './modules/delegation/delegation.module';
-import { ChanceModule } from './modules/chance/chance.module';
-import { TaskModule } from './modules/task/task.module';
-import { CommentModule } from './modules/comment/comment.module';
+import { PrismaModule } from './prisma/prisma.module';
+
 import { PersonService } from './core/application/services/person/person.service';
 import { EmployeeService } from './core/application/services/employee/employee.service';
 import { LocationService } from './core/application/services/location/location.service';
@@ -46,7 +29,7 @@ import { CommentService } from './core/application/services/comment/comment.serv
 
 
 @Module({
-  imports: [AuthModule, PrismaModule, PersonModule, EmployeeModule, LocationModule, ConsumerModule, PermissionModule, ModuleModule, QuotaModule, PaymentMethodModule, TransactionModule, CategoryModule, BrandModule, ProductModule, ItemModule, ServiceModule, DelegationModule, ChanceModule, TaskModule, CommentModule],
+  imports: [AuthModule, PrismaModule],
   providers: [PersonService, EmployeeService, LocationService, ConsumerService, PermissionService, ModuleService, QuotaService, PaymentMethodService, TransactionService, CategoryService, BrandService, ProductService, ItemService, ServiceService, DelegationService, ChanceService, TaskService, CommentService]
   // imports: [UserModule, PrismaModule],
   // controllers: [AppController],
