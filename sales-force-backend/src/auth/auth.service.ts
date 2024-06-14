@@ -14,10 +14,12 @@ export class AuthService {
     constructor(private prisma: PrismaService, private jwt: JwtService) { }
 
     async signup(dto: AuthDto) {
+       
         const { username, password, role, isActive, personId } = dto
+        
         const foundUser = await this.prisma.employee.findUnique({ where: { username } })
         if (foundUser) {
-            throw new BadRequestException('Email already exists')
+            throw new BadRequestException('Username already exists')
         }
 
         const hashedPassword = await this.hashPassword(password)

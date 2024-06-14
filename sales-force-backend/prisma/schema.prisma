@@ -11,9 +11,9 @@ model Person {
   id             Int      @id @default(autoincrement()) @map("id")
   dni            String   @unique @map("dni")
   firstName      String   @map("first_name")
-  secondName     String   @map("second_name")
+  secondName     String?   @map("second_name")
   lastName       String   @map("lastname")
-  secondLastName String   @map("second_lastname")
+  secondLastName String?  @map("second_lastname")
   gender         String   @map("gender")
   email          String   @map("email")
   address        String?  @map("address")
@@ -136,7 +136,7 @@ model Transaction {
 
 model Category {
   id        Int      @id @default(autoincrement())
-  name      String
+  name      String  
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt()
 
