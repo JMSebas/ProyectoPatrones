@@ -14,7 +14,7 @@ import { CategoryModule } from './features/category/infrastructure/category.modu
 import { ChanceModule } from './features/chance/infrastructure/chance.module'; 
 import { ConsumerModule } from './features/consumer/consumer/consumer.module';
 import { DelegationModule } from './features/delegation/delegation/delegation.module';
-import { EmployeeModule } from './features/employee/employee/employee.module';
+import { EmployeeModule } from './features/employee/infrastructure/employee.module';
 import { LocationModule } from './features/location/location/location.module';
 import { ItemModule } from './features/item/item/item.module';
 import { PaymentMethodModule } from './features/payment-method/payment-method/payment-method.module';
