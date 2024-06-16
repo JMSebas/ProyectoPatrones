@@ -9,16 +9,14 @@ import { Person } from '@prisma/client';
 export class PersonService implements PersonServiceInterface{
   constructor(readonly prismaService: PrismaService) { 
   }
-  
+
   async create(createPersonDto: CreatePersonDto): Promise<Person> {
     return await this.prismaService.person.create(
       {
         data:{
           dni: createPersonDto.dni,
           firstName: createPersonDto.firstName,
-          secondName: createPersonDto.secondName,
           lastName: createPersonDto.lastName,
-          secondLastName: createPersonDto.secondLastName,
           gender: createPersonDto.gender,
           address: createPersonDto.address,
           phone: createPersonDto.phone,

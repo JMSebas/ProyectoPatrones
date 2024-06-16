@@ -12,17 +12,10 @@ export class CreatePersonDto {
     @IsString()
     firstName: string;
 
-    @IsOptional()
-    @IsString()
-    secondName: string;
-
     @IsNotEmpty()
     @IsString()
     lastName: string;
 
-    @IsOptional()
-    @IsString()
-    secondLastName: string;
 
     @IsNotEmpty()
     @IsString()
