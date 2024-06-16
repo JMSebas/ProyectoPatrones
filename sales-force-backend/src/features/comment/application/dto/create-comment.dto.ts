@@ -6,7 +6,4 @@ export class CreateCommentDto {
     @IsNotEmpty()
     content: string;
   
-    // @IsInt()
-    // @IsNotEmpty()
-    // taskId: number;
 }

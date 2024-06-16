@@ -14,7 +14,9 @@ async function bootstrap() {
   .setTitle("Sales Force")
   .setDescription("APIs of Sales Force Project")
   .setVersion("1.0.0")
+  .addCookieAuth()
   .build();
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("docs", app, document);
   
