@@ -1,8 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ConsumerService } from './consumer.service';
-import { CreateConsumerDto } from './dto/create-consumer.dto';
-import { UpdateConsumerDto } from './dto/update-consumer.dto';
+import { ConsumerService } from '../application/consumer.service'; 
+import { CreateConsumerDto } from '../application/dto/create-consumer.dto';
+import { UpdateConsumerDto } from '../application/dto/update-consumer.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Consumer')
 @Controller('consumer')
 export class ConsumerController {
   constructor(private readonly consumerService: ConsumerService) {}

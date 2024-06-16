@@ -2,7 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { TaskService } from '../application/task.service';
 import { CreateTaskDto } from '../application/dto/create-task.dto';
 import { UpdateTaskDto } from '../application/dto/update-task.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Task')
 @Controller('task')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
@@ -22,10 +23,10 @@ export class TaskController {
     return this.taskService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.taskService.update(+id, updateTaskDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
+  //   return this.taskService.update(+id, updateTaskDto);
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

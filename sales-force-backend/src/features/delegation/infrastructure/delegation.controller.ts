@@ -1,8 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { DelegationService } from './delegation.service';
-import { CreateDelegationDto } from './dto/create-delegation.dto';
-import { UpdateDelegationDto } from './dto/update-delegation.dto';
+import { DelegationService } from '../application/delegation.service'; 
+import { CreateDelegationDto } from '../application/dto/create-delegation.dto';
+import { UpdateDelegationDto } from '../application/dto/update-delegation.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Delegation')
 @Controller('delegation')
 export class DelegationController {
   constructor(private readonly delegationService: DelegationService) {}
