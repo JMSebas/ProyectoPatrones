@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ChanceService } from '../application/chance.service';
 import { CreateChanceDto } from '../application/dto/create-chance.dto'; 
 import { UpdateChanceDto } from '../application/dto/update-chance.dto'; 
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Chance')
 @Controller('chance')
 export class ChanceController {
   constructor(private readonly chanceService: ChanceService) {}

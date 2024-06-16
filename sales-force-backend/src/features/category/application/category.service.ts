@@ -21,7 +21,7 @@ async  create(createCategoryDto: CreateCategoryDto):Promise<Category> {
     return await this.prismaService.category.findMany();
   }
 
- async  findOne(id: number): Promise<Category> {
+ async  findOne(id: number): Promise<Category | null> {
     return await this.prismaService.category.findUnique({
       where: {
         id
@@ -29,7 +29,7 @@ async  create(createCategoryDto: CreateCategoryDto):Promise<Category> {
     });
   }
 
-  async update(id: number, updateCategoryDto: UpdateCategoryDto): Promise<Category> {
+  async update(id: number, updateCategoryDto: UpdateCategoryDto): Promise<Category > {
     return await this.prismaService.category.update({
       where:{
         id

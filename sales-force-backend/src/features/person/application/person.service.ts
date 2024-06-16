@@ -9,6 +9,7 @@ import { Person } from '@prisma/client';
 export class PersonService implements PersonServiceInterface{
   constructor(readonly prismaService: PrismaService) { 
   }
+  
   async create(createPersonDto: CreatePersonDto): Promise<Person> {
     return await this.prismaService.person.create(
       {
@@ -32,6 +33,8 @@ export class PersonService implements PersonServiceInterface{
   async findAll():Promise<Person []>  {
     return await this.prismaService.person.findMany();
   }
+
+  
 
   async findOne(id: number): Promise<Person | null>{
     return await this.prismaService.person.findUnique({

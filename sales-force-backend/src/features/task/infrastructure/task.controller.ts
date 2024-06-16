@@ -1,8 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { TaskService } from '../application/task.service';
 import { CreateTaskDto } from '../application/dto/create-task.dto';
 import { UpdateTaskDto } from '../application/dto/update-task.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/auth/guard/role.decorator';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
+@ApiCookieAuth()
 @ApiTags('Task')
 @Controller('task')
 export class TaskController {
@@ -13,6 +16,8 @@ export class TaskController {
     return this.taskService.create(createTaskDto);
   }
 
+  @UseGuards(RolesGuard)
+  @Roles('user')
   @Get()
   findAll() {
     return this.taskService.findAll();
@@ -23,10 +28,7 @@ export class TaskController {
     return this.taskService.findOne(+id);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-  //   return this.taskService.update(+id, updateTaskDto);
-  // }
+
 
   @Delete(':id')
   remove(@Param('id') id: string) {

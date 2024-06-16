@@ -28,19 +28,7 @@ export class AuthController {
     return this.authService.signout(req, res)
   }
 
-  @UseGuards(RolesGuard)
-  @Get('admin')
-  @Roles('admin') 
-  getAdminData() {
-    return 'This data is only for admins';
-  }
 
-  @UseGuards(RolesGuard)
-  @Get('user')
-  @Roles('user') 
-  getUserData() {
-    return 'This data is only for users';
-  }
 
 }
 
