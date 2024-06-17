@@ -1,26 +1,55 @@
 import { Injectable } from '@nestjs/common';
 import { CreateQuotaDto } from '../application/dto/create-quota.dto';
 import { UpdateQuotaDto } from '../application/dto/update-quota.dto';
+import { QuotaInterfaceService } from './ports/quota-repository';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Quota } from '@prisma/client';
 
 @Injectable()
-export class QuotaService {
-  create(createQuotaDto: CreateQuotaDto) {
-    return 'This action adds a new quota';
+export class QuotaService implements QuotaInterfaceService {
+
+constructor(readonly prismaService: PrismaService){}
+
+ async  create(createQuotaDto: CreateQuotaDto): Promise<Quota> {
+    return await this.prismaService.quota.create({
+      data:{
+        startDate: createQuotaDto.startDate,
+        endDate: createQuotaDto.endDate,
+        amout: createQuotaDto.amout,
+        comission: createQuotaDto.comission,
+        achieved: createQuotaDto.achieved,
+        employeeId: createQuotaDto.employeeId
+
+      }
+    });
   }
 
-  findAll() {
-    return `This action returns all quota`;
+  async findAll(): Promise<Quota []> {
+    return await this.prismaService.quota.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} quota`;
+  async findOne(id: number): Promise<Quota | null> {
+    return await this.prismaService.quota.findUnique({
+      where:{
+        id
+      }
+    });
   }
 
-  update(id: number, updateQuotaDto: UpdateQuotaDto) {
-    return `This action updates a #${id} quota`;
+  async update(id: number, updateQuotaDto: UpdateQuotaDto): Promise<Quota> {
+    return await this.prismaService.quota.update({
+      where:{
+        id
+      },
+      data: updateQuotaDto
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} quota`;
+ async  remove(id: number): Promise<Quota>{
+    return await this.prismaService.quota.delete({
+      where: {
+        id
+      }
+    });
   }
 }

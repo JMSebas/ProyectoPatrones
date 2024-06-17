@@ -10,7 +10,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({whitelist: true}));
   app.use(cookieParser());
 
-  app.enableCors()
+  app.enableCors({
+    origin: true,
+    credentials: true
+  })
 
 
   const config = new DocumentBuilder()

@@ -1,5 +1,5 @@
-import { Decimal } from "@prisma/client/runtime/library";
-import { IsDecimal, IsNotEmpty, IsString } from "class-validator";
+
+import { IsDecimal, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class CreatePaymentMethodDto {
 
@@ -7,8 +7,8 @@ export class CreatePaymentMethodDto {
     @IsNotEmpty()
     name: string;
 
-    @IsDecimal()
+    @IsNumber()
     @IsNotEmpty()
-    taxes: Decimal;
+    taxes: number;
 
 }
