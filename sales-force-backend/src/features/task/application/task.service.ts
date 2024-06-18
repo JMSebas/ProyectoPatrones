@@ -4,16 +4,17 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Task } from '@prisma/client';
 import { CreateCommentDto } from 'src/features/comment/application/dto/create-comment.dto';
+import { TaskInterfaceService } from './ports/task-repository';
 
 @Injectable()
-export class TaskService {
+export class TaskService implements TaskInterfaceService{
 
   constructor(private readonly prismaService: PrismaService){}
 
   async create(createTaskDto: CreateTaskDto): Promise<Task> {
     const taskData = {
       date: createTaskDto.date,
-      state: createTaskDto.state,
+      state: 'Pending',
       type: createTaskDto.type,
       estimatedTime: createTaskDto.estimatedTime,
       delegationId: createTaskDto.delegationId,
@@ -70,20 +71,21 @@ export class TaskService {
     });
   }
 
-  
+async changeState(id: number): Promise<Task> {
 
+  await this.prismaService.task.update({
+    where:{
+      id
+    },
+    data: {
+      state: 'Completed'
+    }
+  });
 
-  // async update(id: number, updateTaskDto: UpdateTaskDto): Promise<Task> {
-  //   return await this.prismaService.task.update({
-  //     where:{
-  //       id
-  //     },
-  //     data: ...updateTaskDto,
-  //     comments: {
-  //       updateM
-  //     }
-  //   });
-  // }
+  return this.findOne(id)
+
+    
+}
 
   async remove(id: number): Promise<Task> {
     await this.prismaService.comment.deleteMany({

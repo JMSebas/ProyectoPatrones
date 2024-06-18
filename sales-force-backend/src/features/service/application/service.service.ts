@@ -1,26 +1,51 @@
 import { Injectable } from '@nestjs/common';
 import { CreateServiceDto } from '../application/dto/create-service.dto';
 import { UpdateServiceDto } from '../application/dto/update-service.dto';
+import { ServiceInterfaceService } from './ports/service-repository';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Service } from '@prisma/client';
 
 @Injectable()
-export class ServiceService {
-  create(createServiceDto: CreateServiceDto) {
-    return 'This action adds a new service';
+export class ServiceService implements ServiceInterfaceService{
+constructor(readonly prismaService: PrismaService){}
+
+  async create(createServiceDto: CreateServiceDto):Promise<Service> {
+    return await this.prismaService.service.create({
+      data:{
+        name: createServiceDto.name,
+        description: createServiceDto.description,
+        isAvaliable: createServiceDto.isAvaliable,
+        priceHour: createServiceDto.priceHour
+      }
+    });
   }
 
-  findAll() {
-    return `This action returns all service`;
+ async  findAll():Promise<Service[]> {
+    return await this.prismaService.service.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} service`;
+  async findOne(id: number):Promise<Service | null> {
+    return await this.prismaService.service.findUnique({
+      where:{
+        id
+      }
+    });
   }
 
-  update(id: number, updateServiceDto: UpdateServiceDto) {
-    return `This action updates a #${id} service`;
+  async update(id: number, updateServiceDto: UpdateServiceDto): Promise<Service> {
+    return await this.prismaService.service.update({
+      where:{
+        id
+      },
+      data: updateServiceDto
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} service`;
+  async remove(id: number): Promise<Service> {
+    return await this.prismaService.service.delete({
+      where:{
+        id
+      }
+    });
   }
 }
