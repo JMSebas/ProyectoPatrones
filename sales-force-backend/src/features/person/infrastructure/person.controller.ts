@@ -3,6 +3,7 @@ import { PersonService } from '../application/person.service';
 import { CreatePersonDto } from '../application/dto/create-person.dto';
 import { UpdatePersonDto } from '../application/dto/update-person.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { CreateConsumerPersonDto } from '../application/dto/consumer/create-consumerPerson.dto';
 @ApiTags('Person')
 @Controller('person')
 export class PersonController {
@@ -11,6 +12,11 @@ export class PersonController {
   @Post()
   create(@Body() createPersonDto: CreatePersonDto) {
     return this.personService.create(createPersonDto);
+  }
+
+  @Post('createConsumer')
+  createConsumer(@Body() CreateConsumerPersonDto: CreateConsumerPersonDto){
+    return this.personService.createConsumer(CreateConsumerPersonDto);
   }
 
   @Get()
@@ -22,6 +28,8 @@ export class PersonController {
   findOne(@Param('id') id: string) {
     return this.personService.findOne(+id);
   }
+
+
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePersonDto: UpdatePersonDto) {

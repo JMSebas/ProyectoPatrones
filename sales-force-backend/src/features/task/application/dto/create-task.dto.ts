@@ -7,8 +7,6 @@ export class CreateTaskDto {
     @Type(() => Date)
     date: Date;
   
-
-  
     @IsString()
     @IsNotEmpty()
     type: string;

@@ -1,26 +1,64 @@
 import { Injectable } from '@nestjs/common';
 import { CreateChanceDto } from './dto/create-chance.dto';
 import { UpdateChanceDto } from './dto/update-chance.dto';
+import { ChanceInterfaceService } from './ports/chance-repository';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Chance } from '@prisma/client';
+import { Decimal } from '@prisma/client/runtime/library';
 
 @Injectable()
-export class ChanceService {
-  create(createChanceDto: CreateChanceDto) {
-    return 'This action adds a new chance';
+export class ChanceService implements ChanceInterfaceService {
+  constructor(readonly prismaService: PrismaService) { }
+
+  async create(createChanceDto: CreateChanceDto): Promise<Chance> {
+    return await this.prismaService.chance.create({
+      data: {
+        amount: createChanceDto.amount,
+        status: 'Pending',
+        date: createChanceDto.date,
+        delegationId: createChanceDto.delegationId
+
+
+      }
+    });
   }
 
-  findAll() {
-    return `This action returns all chance`;
+  async findAll(): Promise<Chance[]> {
+    return await this.prismaService.chance.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} chance`;
+  async findOne(id: number): Promise<Chance | null> {
+    return await this.prismaService.chance.findUnique({
+      where: {
+        id
+      }
+    });
+  }
+  async changeState(id: number): Promise<Chance> {
+    return await this.prismaService.chance.update({
+      where: {
+        id
+      },
+      data: {
+        status: 'Completed'
+      }
+    })
+
+  }
+  async update(id: number, updateChanceDto: UpdateChanceDto): Promise<Chance> {
+    return await this.prismaService.chance.update({
+      where: {
+        id
+      },
+      data: updateChanceDto
+    });
   }
 
-  update(id: number, updateChanceDto: UpdateChanceDto) {
-    return `This action updates a #${id} chance`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} chance`;
+  async remove(id: number): Promise<Chance> {
+    return await this.prismaService.chance.delete({
+      where: {
+        id
+      }
+    });
   }
 }

@@ -4,7 +4,6 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 import { TaskModule } from './features/task/infrastructure/task.module';
-// import { CommentModule } from './features/comment/infrastructure/comment.module';
 import { CategoryModule } from './features/category/infrastructure/category.module'; 
 import { ChanceModule } from './features/chance/infrastructure/chance.module'; 
 import { ConsumerModule } from './features/consumer/infrastructure/consumer.module';
@@ -20,6 +19,7 @@ import { QuotaModule } from './features/quota/infrastructure/quota.module';
 import { TransactionModule } from './features/transaction/infrastructure/transaction.module';
 import { ModuleModule } from './features/module/infrastructure/module.module';
 import { ServiceModule } from './features/service/infrastructure/service.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 
 
@@ -27,7 +27,25 @@ import { ServiceModule } from './features/service/infrastructure/service.module'
 
 
 @Module({
-  imports: [AuthModule, PrismaModule,  TaskModule,  CategoryModule, ChanceModule, ConsumerModule, DelegationModule, EmployeeModule, LocationModule, ItemModule, PaymentMethodModule, PermissionModule, PersonModule, ProductModule, QuotaModule, TransactionModule, ModuleModule, ServiceModule,
+  imports: [AuthModule, 
+    PrismaModule,  
+    TaskModule,  
+    CategoryModule, 
+    ChanceModule, 
+    ConsumerModule, 
+    DelegationModule, 
+    EmployeeModule, 
+    LocationModule, 
+    ItemModule, 
+    PaymentMethodModule, 
+    PermissionModule, 
+    PersonModule, 
+    ProductModule, 
+    QuotaModule, 
+    TransactionModule, 
+    ModuleModule, 
+    ServiceModule,
+    EventEmitterModule.forRoot()
     
   ],
 })

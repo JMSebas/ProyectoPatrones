@@ -10,6 +10,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({whitelist: true}));
   app.use(cookieParser());
 
+  
   app.enableCors({
     origin: true,
     credentials: true
@@ -20,7 +21,7 @@ async function bootstrap() {
   .setTitle("Sales Force")
   .setDescription("APIs of Sales Force Project")
   .setVersion("1.0.0")
-  .addCookieAuth()
+  .addCookieAuth('Token')
   .build();
 
   const document = SwaggerModule.createDocument(app, config);

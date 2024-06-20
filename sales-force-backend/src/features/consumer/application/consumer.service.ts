@@ -11,7 +11,7 @@ export class ConsumerService implements ConsumerInterfaceService{
 
   async create(createConsumerDto: CreateConsumerDto):Promise<Consumer> {
     return await this.prismaService.consumer.create({
-      data:{
+      data: {
         type: createConsumerDto.type,
         isCustomer: createConsumerDto.isCustomer,
         personId: createConsumerDto.personId
