@@ -205,7 +205,7 @@ model Delegation {
 
 model Chance {
   id        Int      @id @default(autoincrement())
-  amount    String
+  amount    Decimal
   status    String
   date      DateTime
   createdAt DateTime @default(now())

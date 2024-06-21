@@ -2,8 +2,9 @@ import { Consumer, Employee } from "@prisma/client";
 import { Type } from "class-transformer";
 import { IsEmail,  IsInt, IsNotEmpty, IsOptional, IsString, Length, Min, ValidateNested } from "class-validator";
 import { CreateConsumerDto } from "src/features/consumer/application/dto/create-consumer.dto";
+import { CreateConsumerNestedDto } from "src/features/consumer/application/dto/create-consumerNested.dto";
 
-export class CreatePersonDto {
+export class CreateConsumerPersonDto {
     @IsNotEmpty()
     @IsString()
     dni: string;
@@ -43,12 +44,8 @@ export class CreatePersonDto {
     @IsNotEmpty()
     locationId: number;
 
-  
-    
-
-   
-
-
-
-
+    @ValidateNested({each: true})
+    @IsNotEmpty()
+    @Type(()=> CreateConsumerNestedDto)
+    consumer: CreateConsumerNestedDto;
 }

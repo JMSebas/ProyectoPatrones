@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Task } from '@prisma/client';
 import { CreateCommentDto } from 'src/features/comment/application/dto/create-comment.dto';
 import { TaskInterfaceService } from './ports/task-repository';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 
 @Injectable()
 export class TaskService implements TaskInterfaceService{
 
-  constructor(private readonly prismaService: PrismaService){}
+  constructor(private readonly prismaService: PrismaService, private readonly eventEmitter: EventEmitter2){}
 
   async create(createTaskDto: CreateTaskDto): Promise<Task> {
     const taskData = {
@@ -24,10 +24,18 @@ export class TaskService implements TaskInterfaceService{
       content: commentDto.content,
     }));
 
+
+    this.eventEmitter.emit(
+      'task.created'
+    );
+    
+    
+
     return await this.prismaService.task.create({
       data: {
         ...taskData,
         comments: {
+          
           create: comments,
         },
       },
@@ -71,6 +79,7 @@ export class TaskService implements TaskInterfaceService{
     });
   }
 
+  
 async changeState(id: number): Promise<Task> {
 
   await this.prismaService.task.update({

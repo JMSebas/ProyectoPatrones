@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { ChanceService } from '../application/chance.service';
 import { CreateChanceDto } from '../application/dto/create-chance.dto'; 
 import { UpdateChanceDto } from '../application/dto/update-chance.dto'; 
@@ -24,6 +24,12 @@ export class ChanceController {
     return this.chanceService.findOne(+id);
   }
 
+  @Put('changeStatus/:id')
+  changeState(@Param('id') id: string){
+    return this.chanceService.changeState(+id)
+  }
+
+  
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateChanceDto: UpdateChanceDto) {
     return this.chanceService.update(+id, updateChanceDto);
