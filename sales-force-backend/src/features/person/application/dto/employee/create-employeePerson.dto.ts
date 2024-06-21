@@ -3,6 +3,7 @@ import { Type } from "class-transformer";
 import { IsEmail,  IsInt, IsNotEmpty, IsOptional, IsString, Length, Min, ValidateNested } from "class-validator";
 import { CreateConsumerDto } from "src/features/consumer/application/dto/create-consumer.dto";
 import { CreateEmployeeDto } from "src/features/employee/application/dto/create-employee.dto";
+import { CreateEmployeeNestedDto } from "src/features/employee/application/dto/create-employeeNested.dto";
 
 export class CreateEmployeePersonDto {
     @IsNotEmpty()
@@ -46,6 +47,6 @@ export class CreateEmployeePersonDto {
 
     @ValidateNested({each: true})
     @IsNotEmpty()
-    @Type(()=> CreateEmployeeDto)
-    employee: Employee;
+    @Type(()=> CreateEmployeeNestedDto)
+    employee: CreateEmployeeNestedDto;
 }

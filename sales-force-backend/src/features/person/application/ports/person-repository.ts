@@ -2,6 +2,7 @@ import { Person } from "@prisma/client";
 import { CreatePersonDto } from "../dto/create-person.dto";
 import { UpdatePersonDto } from "../dto/update-person.dto";
 import { CreateConsumerPersonDto } from "../dto/consumer/create-consumerPerson.dto";
+import { CreateEmployeePersonDto } from "../dto/employee/create-employeePerson.dto";
 
 export interface PersonServiceInterface {
     create(createPersonDto: CreatePersonDto): Promise<Person>;
@@ -11,5 +12,7 @@ export interface PersonServiceInterface {
     remove(id: number): Promise<Person>;
 
     createConsumer(createConsumerPersonDto: CreateConsumerPersonDto): Promise<Person>;
+    createEmployee(createEmployeePersonDto: CreateEmployeePersonDto ):Promise<Person>;
+
   }
   

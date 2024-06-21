@@ -4,6 +4,7 @@ import { CreatePersonDto } from '../application/dto/create-person.dto';
 import { UpdatePersonDto } from '../application/dto/update-person.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateConsumerPersonDto } from '../application/dto/consumer/create-consumerPerson.dto';
+import { CreateEmployeePersonDto } from '../application/dto/employee/create-employeePerson.dto';
 @ApiTags('Person')
 @Controller('person')
 export class PersonController {
@@ -15,10 +16,15 @@ export class PersonController {
   }
 
   @Post('createConsumer')
-  createConsumer(@Body() CreateConsumerPersonDto: CreateConsumerPersonDto){
-    return this.personService.createConsumer(CreateConsumerPersonDto);
+  createConsumer(@Body() createConsumerPersonDto: CreateConsumerPersonDto){
+    return this.personService.createConsumer(createConsumerPersonDto);
   }
 
+  @Post('createEmployee')
+  createEmployee(@Body() createEmployeePersonDto: CreateEmployeePersonDto){
+    return this.personService.createEmployee(createEmployeePersonDto);
+  }
+  
   @Get()
   findAll() {
     return this.personService.findAll();
