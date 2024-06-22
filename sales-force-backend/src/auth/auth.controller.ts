@@ -1,11 +1,10 @@
-import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 import { SigninDto } from './dto/signin.dto';
-import { Roles } from './guard/role.decorator';
-import { RolesGuard } from './guard/roles.guard';
+import { ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags("Authentication")
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
@@ -27,27 +26,6 @@ export class AuthController {
     return this.authService.signout(req, res)
   }
 
-  @UseGuards(RolesGuard)
-  @Get('admin')
-  @Roles('admin, user') 
-  getAdminData() {
-    return 'This data is only for admins';
-  }
-
-  @UseGuards(RolesGuard)
-  @Get('user')
-  @Roles('user') 
-  getUserData() {
-    return 'This data is only for users';
-  }
-
-  
-  @UseGuards(RolesGuard)
-  @Post('admin1')
-  @Roles('admin') 
-  postUserData() {
-    return 'post usado por admins';
-  }
 
 
 }

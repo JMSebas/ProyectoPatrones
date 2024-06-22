@@ -1,38 +1,53 @@
 import { Module } from '@nestjs/common';
-// import { AppController } from './app.controller';
-// import { AppService } from './app.service';
-// import { UserModule } from './user/user.module';
-// import { PrismaService } from './prisma/prisma.service';
-// import { PrismaModule } from './prisma/prisma.module';
+
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 
-import { PersonService } from './core/application/services/person/person.service';
-import { EmployeeService } from './core/application/services/employee/employee.service';
-import { LocationService } from './core/application/services/location/location.service';
-import { ConsumerService } from './core/application/services/consumer/consumer.service';
-import { PermissionService } from './core/application/services/permission/permission.service';
-import { ModuleService } from './core/application/services/module/module.service';
-import { QuotaService } from './core/application/services/quota/quota.service';
-import { PaymentMethodService } from './core/application/services/payment-method/payment-method.service';
-import { TransactionService } from './core/application/services/transaction/transaction.service';
-import { CategoryService } from './core/application/services/category/category.service';
-import { BrandService } from './core/application/services/brand/brand.service';
-import { ProductService } from './core/application/services/product/product.service';
-import { ItemService } from './core/application/services/item/item.service';
-import { ServiceService } from './core/application/services/service/service.service';
-import { DelegationService } from './core/application/services/delegation/delegation.service';
-import { ChanceService } from './core/application/services/chance/chance.service';
-import { TaskService } from './core/application/services/task/task.service';
-import { CommentService } from './core/application/services/comment/comment.service';
+
+import { TaskModule } from './features/task/infrastructure/task.module';
+import { CategoryModule } from './features/category/infrastructure/category.module'; 
+import { ChanceModule } from './features/chance/infrastructure/chance.module'; 
+import { ConsumerModule } from './features/consumer/infrastructure/consumer.module';
+import { DelegationModule } from './features/delegation/infrastructure/delegation.module';
+import { EmployeeModule } from './features/employee/infrastructure/employee.module';
+import { LocationModule } from './features/location/infrastructure/location.module'; 
+import { ItemModule } from './features/item/infrastructure/item.module';
+import { PaymentMethodModule } from './features/payment-method/infrastructure/payment-method.module'; 
+import { PermissionModule } from './features/permission/infrastructure/permission.module';
+import { PersonModule } from './features/person/infrastructure/person.module'; 
+import { ProductModule } from './features/product/infrastructure/product.module'; 
+import { QuotaModule } from './features/quota/infrastructure/quota.module'; 
+import { TransactionModule } from './features/transaction/infrastructure/transaction.module';
+import { ModuleModule } from './features/module/infrastructure/module.module';
+import { ServiceModule } from './features/service/infrastructure/service.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+
 
 
 
 @Module({
-  imports: [AuthModule, PrismaModule],
-  providers: [PersonService, EmployeeService, LocationService, ConsumerService, PermissionService, ModuleService, QuotaService, PaymentMethodService, TransactionService, CategoryService, BrandService, ProductService, ItemService, ServiceService, DelegationService, ChanceService, TaskService, CommentService]
-  // imports: [UserModule, PrismaModule],
-  // controllers: [AppController],
-  // providers: [AppService, PrismaService],
+
+  imports: [AuthModule, 
+    PrismaModule,  
+    TaskModule,  
+    CategoryModule, 
+    ChanceModule, 
+    ConsumerModule, 
+    DelegationModule, 
+    EmployeeModule, 
+    LocationModule, 
+    ItemModule, 
+    PaymentMethodModule, 
+    PermissionModule, 
+    PersonModule, 
+    ProductModule, 
+    QuotaModule, 
+    TransactionModule, 
+    ModuleModule, 
+    ServiceModule,
+    EventEmitterModule.forRoot()
+    
+  ],
+
 })
 export class AppModule {}

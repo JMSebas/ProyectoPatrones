@@ -19,6 +19,6 @@ export class AuthDto {
     public isActive: boolean;
 
     @IsInt()
-    @Min(1, { message: 'Role ID must be a positive integer' })
+    @Min(1, { message: 'Person ID must be a positive integer' })
     public personId: number;
 }
