@@ -1,9 +1,7 @@
-import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 import { SigninDto } from './dto/signin.dto';
-import { Roles } from './guard/role.decorator';
-import { RolesGuard } from './guard/roles.guard';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags("Authentication")
@@ -21,13 +19,13 @@ export class AuthController {
     return this.authService.signin(dto, req, res)
   }
 
-  
 
   @Get('signout')
   signout(@Req() req, @Res() res) {
     return this.authService.signout(req, res)
   }
 
+  
 
 
 }

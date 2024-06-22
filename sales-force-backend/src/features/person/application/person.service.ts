@@ -73,7 +73,9 @@ export class PersonService implements PersonServiceInterface{
       birthDate: createEmployeePersonDto.birthDate,
       locationId: createEmployeePersonDto.locationId
      }
-     const { password } = createEmployeePersonDto.employee;
+
+
+    const { password } = createEmployeePersonDto.employee;
     const hashedPassword = await this.hashPassword(password)
 
      const employeeData = {
@@ -124,6 +126,17 @@ export class PersonService implements PersonServiceInterface{
 
 
   async remove(id: number): Promise<Person>{
+    this.prismaService.employee.delete({
+      where: {
+        personId: id
+      }
+    });
+    this.prismaService.consumer.delete({
+      where:{
+        personId: id
+      }
+    })
+    
     return await this.prismaService.person.delete({
       where: {
         id
