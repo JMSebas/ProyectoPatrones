@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 
+
 import { TaskModule } from './features/task/infrastructure/task.module';
 import { CategoryModule } from './features/category/infrastructure/category.module'; 
 import { ChanceModule } from './features/chance/infrastructure/chance.module'; 
@@ -24,9 +25,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 
 
 
-
-
 @Module({
+
   imports: [AuthModule, 
     PrismaModule,  
     TaskModule,  
@@ -48,5 +48,6 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     EventEmitterModule.forRoot()
     
   ],
+
 })
 export class AppModule {}
