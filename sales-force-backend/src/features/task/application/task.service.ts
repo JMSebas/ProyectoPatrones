@@ -7,9 +7,9 @@ import { TaskInterfaceService } from './ports/task-repository';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 
 @Injectable()
-export class TaskService implements TaskInterfaceService{
+export class TaskService implements TaskInterfaceService {
 
-  constructor(private readonly prismaService: PrismaService, private readonly eventEmitter: EventEmitter2){}
+  constructor(private readonly prismaService: PrismaService, private readonly eventEmitter: EventEmitter2) { }
 
   async create(createTaskDto: CreateTaskDto): Promise<Task> {
     const taskData = {
@@ -25,7 +25,7 @@ export class TaskService implements TaskInterfaceService{
     }));
 
     const employeeId = await this.prismaService.delegation.findUnique({
-      where:{
+      where: {
         id: createTaskDto.delegationId
       }
     })
@@ -35,7 +35,7 @@ export class TaskService implements TaskInterfaceService{
       data: {
         ...taskData,
         comments: {
-          
+
           create: comments,
         },
       },
@@ -44,15 +44,15 @@ export class TaskService implements TaskInterfaceService{
 
   }
 
-  async addChance(employeeId: number, reason: string, delegationId: number){
-    if(reason === 'Llamada'){
+  async addChance(employeeId: number, reason: string, delegationId: number) {
+    if (reason === 'Llamada') {
       const quota = await this.getLastQuota(employeeId);
 
-      const amountChance = quota.amout ;
+      const amountChance = quota.amout;
       const now = new Date();
       await this.prismaService.chance.create({
         data: {
-          amount: amountChance ,
+          amount: amountChance,
           status: 'Pending',
           date: now,
           delegationId: delegationId
@@ -64,32 +64,32 @@ export class TaskService implements TaskInterfaceService{
 
   }
 
-  async getLastQuota(employeeId: number): Promise<Quota>{
-   const lastQuota = await this.prismaService.quota.findFirst({
-    orderBy: {
-      createdAt: 'desc'
-    },
-    where:{
-      employeeId: employeeId
+  async getLastQuota(employeeId: number): Promise<Quota> {
+    const lastQuota = await this.prismaService.quota.findFirst({
+      orderBy: {
+        createdAt: 'desc'
+      },
+      where: {
+        employeeId: employeeId
+      }
+    });
+
+    if (!lastQuota) {
+      throw new NotFoundException('No hay quotas');
     }
-   });
 
-   if(!lastQuota){
-    throw new NotFoundException('No hay quotas');
-   }
-
-   return lastQuota
+    return lastQuota
   }
-  
 
-  async findAll(): Promise<Task []> {
+
+  async findAll(): Promise<Task[]> {
     return this.prismaService.task.findMany({
-      select:{
+      select: {
         id: true,
         date: true,
-        state:true,
+        state: true,
         type: true,
-        estimatedTime:true,
+        estimatedTime: true,
         delegationId: true,
         comments: true,
         createdAt: true,
@@ -98,17 +98,17 @@ export class TaskService implements TaskInterfaceService{
     });
   }
 
- async findOne(id: number): Promise<Task> {
+  async findOne(id: number): Promise<Task> {
     return this.prismaService.task.findUnique({
-      where:{
+      where: {
         id
       },
-      select:{
+      select: {
         id: true,
         date: true,
-        state:true,
+        state: true,
         type: true,
-        estimatedTime:true,
+        estimatedTime: true,
         delegationId: true,
         comments: true,
         createdAt: true,
@@ -117,31 +117,31 @@ export class TaskService implements TaskInterfaceService{
     });
   }
 
-  
-async changeState(id: number): Promise<Task> {
 
-  await this.prismaService.task.update({
-    where:{
-      id
-    },
-    data: {
-      state: 'Completed'
-    }
-  });
+  async changeState(id: number): Promise<Task> {
 
-  return this.findOne(id)
+    await this.prismaService.task.update({
+      where: {
+        id
+      },
+      data: {
+        state: 'Completed'
+      }
+    });
 
-    
-}
+    return this.findOne(id)
+
+
+  }
 
   async remove(id: number): Promise<Task> {
     await this.prismaService.comment.deleteMany({
-      where:{
+      where: {
         taskId: id
       }
     });
     return await this.prismaService.task.delete({
-      where:{
+      where: {
         id
       }
     });

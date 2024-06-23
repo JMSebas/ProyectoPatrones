@@ -29,6 +29,27 @@ export class PersonController {
   findAll() {
     return this.personService.findAll();
   }
+  @Get('employee')
+  findAllEmployee(){
+    return this.personService.findAllEmployee()
+  }
+
+  @Get('consumer')
+  findAllConsumer(){
+    return this.personService.findAllConsumer()
+  }
+
+  @Get('employee/:id')
+  findEmployee(@Param('id') id: string){
+    return this.personService.findEmployee(+id)
+  }
+
+  @Get('consumer/:id')
+  findConsumer(@Param('id') id: string){
+    return this.personService.findConsumer(+id)
+  }
+
+
 
   @Get(':id')
   findOne(@Param('id') id: string) {

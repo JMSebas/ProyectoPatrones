@@ -100,6 +100,98 @@ export class PersonService implements PersonServiceInterface{
     return hashedPassword
   }
 
+  async findAllEmployee():Promise<Person []>  {
+    return await this.prismaService.person.findMany({
+      select:{
+        id: true,
+        dni: true,
+        firstName: true,
+        lastName: true,
+        gender: true,
+        address: true,
+        phone: true,
+        email: true,
+        birthDate: true,
+        locationId: true,
+        employee: true,
+        createdAt: true,
+        updateAt: true
+      },
+      where:{
+        consumer: null
+      }
+    });
+  }
+
+  async findAllConsumer():Promise<Person []>  {
+    return await this.prismaService.person.findMany({
+      select:{
+        id: true,
+        dni: true,
+        firstName: true,
+        lastName: true,
+        gender: true,
+        address: true,
+        phone: true,
+        email: true,
+        birthDate: true,
+        locationId: true,
+        consumer: true,
+        createdAt: true,
+        updateAt: true
+      },
+      where: {
+        employee: null
+      }
+    });
+  }
+
+  async findEmployee(id: number): Promise<Person | null>{
+    return await this.prismaService.person.findUnique({
+      select:{
+        id: true,
+        dni: true,
+        firstName: true,
+        lastName: true,
+        gender: true,
+        address: true,
+        phone: true,
+        email: true,
+        birthDate: true,
+        locationId: true,
+        employee: true,
+        createdAt: true,
+        updateAt: true
+      },
+      where:{
+        id,
+        consumer: null
+      }
+    });
+  }
+  async findConsumer(id: number): Promise<Person | null>{
+    return await this.prismaService.person.findUnique({
+      select:{
+        id: true,
+        dni: true,
+        firstName: true,
+        lastName: true,
+        gender: true,
+        address: true,
+        phone: true,
+        email: true,
+        birthDate: true,
+        locationId: true,
+        consumer: true,
+        createdAt: true,
+        updateAt: true
+      },
+      where:{
+        id,
+        employee: null
+      }
+    });
+  }
 
   async findAll():Promise<Person []>  {
     return await this.prismaService.person.findMany();
@@ -136,7 +228,7 @@ export class PersonService implements PersonServiceInterface{
         personId: id
       }
     })
-    
+
     return await this.prismaService.person.delete({
       where: {
         id
