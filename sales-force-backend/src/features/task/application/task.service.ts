@@ -74,9 +74,9 @@ export class TaskService implements TaskInterfaceService {
       }
     });
 
-    if (!lastQuota) {
-      throw new NotFoundException('No hay quotas');
-    }
+    // if (!lastQuota) {
+    //   throw new NotFoundException('No hay quotas');
+    // }
 
     return lastQuota
   }
@@ -93,8 +93,43 @@ export class TaskService implements TaskInterfaceService {
         delegationId: true,
         comments: true,
         createdAt: true,
-        updateAt: true
-      }
+        updateAt: true,
+        delegation: {
+          select: {
+            id: true,
+            employee: {
+              select: {
+                id: true,
+                username: true,
+                role: true,
+                person: {
+                  select: {
+                    dni: true,
+                    firstName: true,
+                    lastName: true
+                  }
+                }
+              }
+            
+            },
+            consumer: {
+              select: {
+                id: true,
+                isCustomer: true,
+                type: true,
+                person: {
+                  select: {
+                    dni: true,
+                    firstName: true,
+                    lastName: true
+                  }
+                }
+              }
+            } 
+          }
+        }
+        
+      },
     });
   }
 
