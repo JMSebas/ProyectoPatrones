@@ -26,10 +26,8 @@ export class RolesGuard implements CanActivate {
             return false;
         }
 
-        const tokenValue = tokenCookie.split('=')[1];
-
        
-
+        const tokenValue = tokenCookie.split('=')[1];
         const token = this.jwtService.decode(tokenValue);
         if (!token) {
             return false;

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Quota, Task } from '@prisma/client';
@@ -7,11 +7,11 @@ import { TaskInterfaceService } from './ports/task-repository';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 
 @Injectable()
-export class TaskService implements TaskInterfaceService{
+export class TaskService implements TaskInterfaceService {
 
-  constructor(private readonly prismaService: PrismaService, private readonly eventEmitter: EventEmitter2){}
+  constructor(private readonly prismaService: PrismaService, private readonly eventEmitter: EventEmitter2) { }
 
-  async create(createTaskDto: CreateTaskDto): Promise<Task> {
+  async create(createTaskDto: CreateTaskDto): Promise<Task | { message: string }> {
     const taskData = {
       date: createTaskDto.date,
       state: 'Pending',
@@ -20,23 +20,30 @@ export class TaskService implements TaskInterfaceService{
       delegationId: createTaskDto.delegationId,
     };
 
-    const comments = createTaskDto.comments?.map((commentDto: CreateCommentDto) => ({
-      content: commentDto.content,
-    }));
+
+    const result = await this.verifDate(createTaskDto);
+
+    if (result) {
+      throw new BadRequestException('Conflicto con el horario')
+    }
 
     const employeeId = await this.prismaService.delegation.findUnique({
-      where:{
+      where: {
         id: createTaskDto.delegationId
       }
     })
 
+
     this.addChance(employeeId.employeeId, createTaskDto.type, createTaskDto.delegationId);
+
+
     return await this.prismaService.task.create({
       data: {
         ...taskData,
         comments: {
-          
-          create: comments,
+          create: {
+            content: createTaskDto.comment.content
+          },
         },
       },
     });
@@ -44,15 +51,27 @@ export class TaskService implements TaskInterfaceService{
 
   }
 
-  async addChance(employeeId: number, reason: string, delegationId: number){
-    if(reason === 'Llamada'){
-      const quota = await this.getLastQuota(employeeId);
 
-      const amountChance = quota.amout ;
+  async addChance(employeeId: number, reason: string, delegationId: number) {
+    if (reason === 'Llamada') {
+      const quota = await this.getLastQuota(employeeId);
+      if (quota === null) {
+        return { message: 'No se ha encontrado cuotas' }
+      }
+      
+      const amountChance = quota.amout.toNumber() / 100;
       const now = new Date();
+      const currentMonth = now.getMonth();
+      let nextMonth = currentMonth + 1;
+      if (nextMonth === 12) {
+        nextMonth = 0;
+        now.setFullYear(now.getFullYear() + 1);
+      }
+      now.setMonth(nextMonth);
+
       await this.prismaService.chance.create({
         data: {
-          amount: amountChance ,
+          amount: amountChance,
           status: 'Pending',
           date: now,
           delegationId: delegationId
@@ -64,32 +83,50 @@ export class TaskService implements TaskInterfaceService{
 
   }
 
-  async getLastQuota(employeeId: number): Promise<Quota>{
-   const lastQuota = await this.prismaService.quota.findFirst({
-    orderBy: {
-      createdAt: 'desc'
-    },
-    where:{
-      employeeId: employeeId
-    }
-   });
+  async getLastQuota(employeeId: number): Promise<Quota> {
+    const lastQuota = await this.prismaService.quota.findFirst({
+      orderBy: {
+        createdAt: 'desc'
+      },
+      where: {
+        employeeId: employeeId
+      }
+    });
 
-   if(!lastQuota){
-    throw new NotFoundException('No hay quotas');
-   }
-
-   return lastQuota
+    return lastQuota
   }
-  
 
-  async findAll(): Promise<Task []> {
+  async verifDate(createTaskDto: CreateTaskDto) {
+    const dates = await this.prismaService.task.findMany({
+      select: {
+        date: true,
+        estimatedTime: true,
+      },
+      where: {
+        state: 'Pending',
+        delegationId: createTaskDto.delegationId,
+      },
+    });
+
+    for (const date of dates) {
+      if (createTaskDto.date >= date.date &&  createTaskDto.date <= date.estimatedTime ||
+       createTaskDto.estimatedTime <= createTaskDto.date
+      ) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  async findAll(): Promise<Task[]> {
     return this.prismaService.task.findMany({
-      select:{
+      select: {
         id: true,
         date: true,
-        state:true,
+        state: true,
         type: true,
-        estimatedTime:true,
+        estimatedTime: true,
         delegationId: true,
         comments: true,
         createdAt: true,
@@ -98,17 +135,17 @@ export class TaskService implements TaskInterfaceService{
     });
   }
 
- async findOne(id: number): Promise<Task> {
+  async findOne(id: number): Promise<Task> {
     return this.prismaService.task.findUnique({
-      where:{
+      where: {
         id
       },
-      select:{
+      select: {
         id: true,
         date: true,
-        state:true,
+        state: true,
         type: true,
-        estimatedTime:true,
+        estimatedTime: true,
         delegationId: true,
         comments: true,
         createdAt: true,
@@ -117,31 +154,33 @@ export class TaskService implements TaskInterfaceService{
     });
   }
 
-  
-async changeState(id: number): Promise<Task> {
 
-  await this.prismaService.task.update({
-    where:{
-      id
-    },
-    data: {
-      state: 'Completed'
-    }
-  });
+  async changeState(id: number): Promise<Task> {
 
-  return this.findOne(id)
+    await this.prismaService.task.update({
+      where: {
+        id
+      },
+      data: {
+        state: 'Completed'
+      }
+    });
 
-    
-}
+    return this.findOne(id)
+
+
+  }
 
   async remove(id: number): Promise<Task> {
     await this.prismaService.comment.deleteMany({
-      where:{
+      where: {
         taskId: id
       }
     });
+
+
     return await this.prismaService.task.delete({
-      where:{
+      where: {
         id
       }
     });
