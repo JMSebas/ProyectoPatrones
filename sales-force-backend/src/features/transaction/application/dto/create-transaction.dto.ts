@@ -1,13 +1,15 @@
 
+import { Decimal } from "@prisma/client/runtime/library";
 import { Type } from "class-transformer";
-import { IsDate, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsDate, IsDecimal, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
 import { CreateItemDto } from "src/features/item/application/dto/create-item.dto";
 import { Product } from "src/features/product/domain/product.entity";
 
 export class CreateTransactionDto {
     @IsNotEmpty()
-    @Type(()=> Date)
+    @Type(() => Date)
     date: Date;
+
 
     @IsNotEmpty()
     @IsString()

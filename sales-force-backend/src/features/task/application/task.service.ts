@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Quota, Task } from '@prisma/client';
@@ -11,7 +11,7 @@ export class TaskService implements TaskInterfaceService {
 
   constructor(private readonly prismaService: PrismaService, private readonly eventEmitter: EventEmitter2) { }
 
-  async create(createTaskDto: CreateTaskDto): Promise<Task> {
+  async create(createTaskDto: CreateTaskDto): Promise<Task | { message: string }> {
     const taskData = {
       date: createTaskDto.date,
       state: 'Pending',
@@ -20,9 +20,12 @@ export class TaskService implements TaskInterfaceService {
       delegationId: createTaskDto.delegationId,
     };
 
-    const comments = createTaskDto.comments?.map((commentDto: CreateCommentDto) => ({
-      content: commentDto.content,
-    }));
+
+    const result = await this.verifDate(createTaskDto);
+
+    if (result) {
+      throw new BadRequestException('Conflicto con el horario')
+    }
 
     const employeeId = await this.prismaService.delegation.findUnique({
       where: {
@@ -30,13 +33,17 @@ export class TaskService implements TaskInterfaceService {
       }
     })
 
+
     this.addChance(employeeId.employeeId, createTaskDto.type, createTaskDto.delegationId);
+
+
     return await this.prismaService.task.create({
       data: {
         ...taskData,
         comments: {
-
-          create: comments,
+          create: {
+            content: createTaskDto.comment.content
+          },
         },
       },
     });
@@ -44,12 +51,24 @@ export class TaskService implements TaskInterfaceService {
 
   }
 
+
   async addChance(employeeId: number, reason: string, delegationId: number) {
     if (reason === 'Llamada') {
       const quota = await this.getLastQuota(employeeId);
-
-      const amountChance = quota.amout;
+      if (quota === null) {
+        return { message: 'No se ha encontrado cuotas' }
+      }
+      
+      const amountChance = quota.amout.toNumber() / 100;
       const now = new Date();
+      const currentMonth = now.getMonth();
+      let nextMonth = currentMonth + 1;
+      if (nextMonth === 12) {
+        nextMonth = 0;
+        now.setFullYear(now.getFullYear() + 1);
+      }
+      now.setMonth(nextMonth);
+
       await this.prismaService.chance.create({
         data: {
           amount: amountChance,
@@ -74,13 +93,31 @@ export class TaskService implements TaskInterfaceService {
       }
     });
 
-    if (!lastQuota) {
-      throw new NotFoundException('No hay quotas');
-    }
-
     return lastQuota
   }
 
+  async verifDate(createTaskDto: CreateTaskDto) {
+    const dates = await this.prismaService.task.findMany({
+      select: {
+        date: true,
+        estimatedTime: true,
+      },
+      where: {
+        state: 'Pending',
+        delegationId: createTaskDto.delegationId,
+      },
+    });
+
+    for (const date of dates) {
+      if (createTaskDto.date >= date.date &&  createTaskDto.date <= date.estimatedTime ||
+       createTaskDto.estimatedTime <= createTaskDto.date
+      ) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   async findAll(): Promise<Task[]> {
     return this.prismaService.task.findMany({
@@ -140,6 +177,8 @@ export class TaskService implements TaskInterfaceService {
         taskId: id
       }
     });
+
+
     return await this.prismaService.task.delete({
       where: {
         id

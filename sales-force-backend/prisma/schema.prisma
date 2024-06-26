@@ -23,8 +23,8 @@ model Person {
   locationId Int
   location   Location @relation(fields: [locationId], references: [id])
 
-  employee Employee?
-  consumer Consumer?
+  employee Employee?  
+  consumer Consumer?  
 }
 
 model Location {
@@ -46,7 +46,7 @@ model Employee {
   updateAt       DateTime @updatedAt()
 
   personId Int    @unique
-  person   Person @relation(fields: [personId], references: [id])
+  person   Person @relation(fields: [personId], references: [id], onDelete: Cascade)
 
   permissions Permission[]
   quotas      Quota[]
@@ -97,7 +97,7 @@ model Consumer {
   updateAt   DateTime @updatedAt()
 
   personId Int    @unique
-  person   Person @relation(fields: [personId], references: [id])
+  person   Person @relation(fields: [personId], references: [id], onDelete: Cascade)
 
   delegations Delegation[]
 }
@@ -129,27 +129,18 @@ model Transaction {
   items Item[]
 }
 
-model Category {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-  updateAt  DateTime @updatedAt()
-
-  products Product[]
-}
-
 model Product {
   id          Int      @id @default(autoincrement())
   name        String
   brand       String
+  category  String
   stock       Int
   price       Decimal
   description String
   createdAt   DateTime @default(now())
   updateAt    DateTime @updatedAt()
 
-  categoryId Int
-  category   Category @relation(fields: [categoryId], references: [id])
+  
 
   items Item[]
 }
@@ -161,26 +152,12 @@ model Item {
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt()
 
-  productId Int?
+  productId Int
   product   Product? @relation(fields: [productId], references: [id])
-  serviceId Int?
-  service   Service? @relation(fields: [serviceId], references: [id])
-
   transactionId Int
   transaction   Transaction @relation(fields: [transactionId], references: [id])
 }
 
-model Service {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String
-  isAvaliable Boolean
-  priceHour   Decimal
-  createdAt   DateTime @default(now())
-  updateAt    DateTime @updatedAt()
-
-  items Item[]
-}
 
 model Delegation {
   id Int @id @default(autoincrement())
@@ -222,7 +199,7 @@ model Task {
 
   delegationId Int
   delegation   Delegation @relation(fields: [delegationId], references: [id])
-  comments     Comment[]
+  comments     Comment?
 }
 
 model Comment {
@@ -231,6 +208,7 @@ model Comment {
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt()
 
-  taskId Int
+  taskId Int @unique
   task   Task @relation(fields: [taskId], references: [id])
 }
+

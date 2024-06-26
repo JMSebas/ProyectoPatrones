@@ -47,6 +47,7 @@ export class AuthService {
         if (!foundUser) {
             throw new BadRequestException('Wrong credentials')
         }
+
         const isMatch = await this.comparePasswords({
             password,
             hash: foundUser.hashedPassword
@@ -65,6 +66,7 @@ export class AuthService {
         if (!token) {
             throw new ForbiddenException()
         }
+
         res.cookie('token', token)
 
         return res.send({ message: 'Logged in succesfully' })

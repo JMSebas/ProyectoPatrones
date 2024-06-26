@@ -9,14 +9,14 @@ import { CreateEmployeePersonDto } from './dto/employee/create-employeePerson.dt
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class PersonService implements PersonServiceInterface{
-  constructor(readonly prismaService: PrismaService) { 
+export class PersonService implements PersonServiceInterface {
+  constructor(readonly prismaService: PrismaService) {
   }
 
   async create(createPersonDto: CreatePersonDto): Promise<Person> {
     return await this.prismaService.person.create(
       {
-        data:{
+        data: {
           dni: createPersonDto.dni,
           firstName: createPersonDto.firstName,
           lastName: createPersonDto.lastName,
@@ -31,37 +31,37 @@ export class PersonService implements PersonServiceInterface{
     );
   }
 
-  
-  async createConsumer(createConsumerPersonDto: CreateConsumerPersonDto):Promise<Person>{
-   const personData = {
-    dni: createConsumerPersonDto.dni,
-    firstName: createConsumerPersonDto.firstName,
-    lastName: createConsumerPersonDto.lastName,
-    gender: createConsumerPersonDto.gender,
-    address: createConsumerPersonDto.address,
-    phone: createConsumerPersonDto.phone,
-    email: createConsumerPersonDto.email,
-    birthDate: createConsumerPersonDto.birthDate,
-    locationId: createConsumerPersonDto.locationId
-   }
 
-   const consumerData = {
+  async createConsumer(createConsumerPersonDto: CreateConsumerPersonDto): Promise<Person> {
+    const personData = {
+      dni: createConsumerPersonDto.dni,
+      firstName: createConsumerPersonDto.firstName,
+      lastName: createConsumerPersonDto.lastName,
+      gender: createConsumerPersonDto.gender,
+      address: createConsumerPersonDto.address,
+      phone: createConsumerPersonDto.phone,
+      email: createConsumerPersonDto.email,
+      birthDate: createConsumerPersonDto.birthDate,
+      locationId: createConsumerPersonDto.locationId
+    }
+
+    const consumerData = {
       type: createConsumerPersonDto.consumer.type,
       isCustomer: createConsumerPersonDto.consumer.isCustomer
-   }
-
-   return await this.prismaService.person.create({
-    data: {
-      ...personData
-    ,
-    consumer: {
-      create: consumerData
     }
-  }
-   })
+
+    return await this.prismaService.person.create({
+      data: {
+        ...personData
+        ,
+        consumer: {
+          create: consumerData
+        }
+      }
+    })
   }
 
-  async createEmployee(createEmployeePersonDto: CreateEmployeePersonDto ):Promise<Person>{
+  async createEmployee(createEmployeePersonDto: CreateEmployeePersonDto): Promise<Person> {
     const personData = {
       dni: createEmployeePersonDto.dni,
       firstName: createEmployeePersonDto.firstName,
@@ -72,18 +72,18 @@ export class PersonService implements PersonServiceInterface{
       email: createEmployeePersonDto.email,
       birthDate: createEmployeePersonDto.birthDate,
       locationId: createEmployeePersonDto.locationId
-     }
+    }
 
 
     const { password } = createEmployeePersonDto.employee;
     const hashedPassword = await this.hashPassword(password)
 
-     const employeeData = {
+    const employeeData = {
       username: createEmployeePersonDto.employee.username,
       hashedPassword,
       role: createEmployeePersonDto.employee.role,
       isActive: createEmployeePersonDto.employee.isActive
-     }
+    }
     return await this.prismaService.person.create({
       data: {
         ...personData,
@@ -100,9 +100,9 @@ export class PersonService implements PersonServiceInterface{
     return hashedPassword
   }
 
-  async findAllEmployee():Promise<Person []>  {
+  async findAllEmployee(): Promise<Person[]> {
     return await this.prismaService.person.findMany({
-      select:{
+      select: {
         id: true,
         dni: true,
         firstName: true,
@@ -117,15 +117,15 @@ export class PersonService implements PersonServiceInterface{
         createdAt: true,
         updateAt: true
       },
-      where:{
+      where: {
         consumer: null
       }
     });
   }
 
-  async findAllConsumer():Promise<Person []>  {
+  async findAllConsumer(): Promise<Person[]> {
     return await this.prismaService.person.findMany({
-      select:{
+      select: {
         id: true,
         dni: true,
         firstName: true,
@@ -146,9 +146,9 @@ export class PersonService implements PersonServiceInterface{
     });
   }
 
-  async findEmployee(id: number): Promise<Person | null>{
+  async findEmployee(id: number): Promise<Person | null> {
     return await this.prismaService.person.findUnique({
-      select:{
+      select: {
         id: true,
         dni: true,
         firstName: true,
@@ -163,15 +163,15 @@ export class PersonService implements PersonServiceInterface{
         createdAt: true,
         updateAt: true
       },
-      where:{
+      where: {
         id,
         consumer: null
       }
     });
   }
-  async findConsumer(id: number): Promise<Person | null>{
+  async findConsumer(id: number): Promise<Person | null> {
     return await this.prismaService.person.findUnique({
-      select:{
+      select: {
         id: true,
         dni: true,
         firstName: true,
@@ -186,53 +186,41 @@ export class PersonService implements PersonServiceInterface{
         createdAt: true,
         updateAt: true
       },
-      where:{
+      where: {
         id,
         employee: null
       }
     });
   }
 
-  async findAll():Promise<Person []>  {
+  async findAll(): Promise<Person[]> {
     return await this.prismaService.person.findMany();
   }
 
-  
-  async findOne(id: number): Promise<Person | null>{
+
+  async findOne(id: number): Promise<Person | null> {
     return await this.prismaService.person.findUnique({
-      where:{
+      where: {
         id
       }
     });
   }
 
-  
+
   async update(id: number, updatePersonDto: UpdatePersonDto): Promise<Person> {
     return await this.prismaService.person.update({
       where: {
         id
-      }, 
+      },
       data: updatePersonDto
     });
   }
 
-
-  async remove(id: number): Promise<Person>{
-    this.prismaService.employee.delete({
-      where: {
-        personId: id
-      }
-    });
-    this.prismaService.consumer.delete({
-      where:{
-        personId: id
-      }
-    })
-
-    return await this.prismaService.person.delete({
-      where: {
-        id
-      }
-    });
+//POR VER
+  async remove(id: number): Promise<Person> {
+  return await this.prismaService.person.delete({
+        where: { id }
+      });
+   
   }
 }

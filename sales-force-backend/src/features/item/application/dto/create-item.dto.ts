@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsNumber } from "class-validator";
+import { IsInt, IsNotEmpty, IsNumber, IsOptional } from "class-validator";
 
 export class CreateItemDto {
     @IsNotEmpty()
@@ -10,11 +10,13 @@ export class CreateItemDto {
     quantity: number;
 
     @IsInt()
+    @IsOptional()
     productId: number;
 
 
-    @IsInt()
-    serviceId: number;
+    // @IsInt()
+    // @IsOptional()
+    // serviceId: number;
 
 
 
