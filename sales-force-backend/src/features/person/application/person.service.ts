@@ -218,12 +218,12 @@ export class PersonService implements PersonServiceInterface{
 
 
   async remove(id: number): Promise<Person>{
-    this.prismaService.employee.delete({
+    await this.prismaService.employee.delete({
       where: {
         personId: id
       }
     });
-    this.prismaService.consumer.delete({
+    await this.prismaService.consumer.delete({
       where:{
         personId: id
       }

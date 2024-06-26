@@ -20,14 +20,73 @@ export class DelegationService implements DelegationInterfaceService{
   }
 
   async findAll(): Promise<Delegation[]> {
-    return await this.prismaService.delegation.findMany();
+    return await this.prismaService.delegation.findMany({include:{
+      employee: {
+        select: {
+          id: true,
+          username: true,
+          role: true,
+          person:  {
+              select:{
+                dni: true,
+                firstName: true,
+                lastName: true
+              }
+            }
+          }
+        },
+      consumer: {
+        select: {
+          id: true,
+          isCustomer: true,
+          type: true,
+          person:  {
+              select:{
+                dni: true,
+                firstName: true,
+                lastName: true
+              }
+            }
+          }
+        }     
+      }});
   }
 
   async findOne(id: number): Promise<Delegation>  {
     return await this.prismaService.delegation.findUnique({
       where:{
         id
-      }
+      },
+      include:{
+        employee: {
+          select: {
+            id: true,
+            username: true,
+            role: true,
+            person:  {
+                select:{
+                  dni: true,
+                  firstName: true,
+                  lastName: true
+                }
+              }
+            }
+          },
+        consumer: {
+          select: {
+            id: true,
+            isCustomer: true,
+            type: true,
+            person:  {
+                select:{
+                  dni: true,
+                  firstName: true,
+                  lastName: true
+                }
+              }
+            }
+          }     
+        }
     });
   }
 

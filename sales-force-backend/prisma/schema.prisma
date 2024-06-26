@@ -129,15 +129,6 @@ model Transaction {
   items Item[]
 }
 
-model Category {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-  updateAt  DateTime @updatedAt()
-
-  products Product[]
-}
-
 model Product {
   id          Int      @id @default(autoincrement())
   name        String
@@ -147,9 +138,7 @@ model Product {
   description String
   createdAt   DateTime @default(now())
   updateAt    DateTime @updatedAt()
-
-  categoryId Int
-  category   Category @relation(fields: [categoryId], references: [id])
+  category    String
 
   items Item[]
 }

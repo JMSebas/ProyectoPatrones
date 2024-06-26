@@ -5,7 +5,6 @@ import { PrismaModule } from './prisma/prisma.module';
 
 
 import { TaskModule } from './features/task/infrastructure/task.module';
-import { CategoryModule } from './features/category/infrastructure/category.module'; 
 import { ChanceModule } from './features/chance/infrastructure/chance.module'; 
 import { ConsumerModule } from './features/consumer/infrastructure/consumer.module';
 import { DelegationModule } from './features/delegation/infrastructure/delegation.module';
@@ -30,7 +29,6 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
   imports: [AuthModule, 
     PrismaModule,  
     TaskModule,  
-    CategoryModule, 
     ChanceModule, 
     ConsumerModule, 
     DelegationModule, 

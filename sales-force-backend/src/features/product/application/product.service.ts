@@ -19,7 +19,7 @@ constructor(readonly prismaService: PrismaService){
         stock: createProductDto.stock,
         price: createProductDto.price,
         description: createProductDto.description,
-        categoryId: createProductDto.categoryId
+        category: createProductDto.category
 
       }
     });

@@ -16,8 +16,6 @@ export class TaskController {
     return this.taskService.create(createTaskDto);
   }
 
-  @UseGuards(RolesGuard)
-  @Roles('user')
   @Get()
   findAll() {
     return this.taskService.findAll();

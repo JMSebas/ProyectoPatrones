@@ -21,7 +21,8 @@ export class ConsumerService implements ConsumerInterfaceService{
   }
 
   async findAll():Promise<Consumer[]> {
-    return await this.prismaService.consumer.findMany();
+    return await this.prismaService.consumer.findMany(
+    );
   }
 
   async findOne(id: number):Promise<Consumer> {
