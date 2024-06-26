@@ -11,33 +11,57 @@ constructor(private readonly prismaService: PrismaService) {
 }
 
 
-  async create(createTransactionDto: CreateTransactionDto) {
-    const transactionData = {
-      date: createTransactionDto.date,
-      type: createTransactionDto.type,
-      status: 'Pending',
-      total: 0,
-      paymentMethodId: createTransactionDto.paymentMethodId,
-      delegationId: createTransactionDto.delegationId
+async create(createTransactionDto: CreateTransactionDto): Promise<Transaction> {
+  const transactionData = {
+    date: createTransactionDto.date,
+    type: createTransactionDto.type,
+    status: 'Pending',
+    total: 0.00,
+    paymentMethodId: createTransactionDto.paymentMethodId,
+    delegationId: createTransactionDto.delegationId
+  }
+
+  const items = createTransactionDto.items?.map((createItemDto: CreateItemDto) => ({
+    quantity: createItemDto.quantity,
+    discount: createItemDto.discount,
+    productId: createItemDto.productId,
+
+  }));
+
+  const productPrices = await this.prismaService.product.findMany({
+    where: {
+      id: {
+        in: items.map(item => item.productId)
+      }
+    },
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      stock: true
+    }
+  });
+
+  items.map((item) => {
+    if (productPrices.length > 0) {
+      const productPrice = productPrices.find(product => product.id === item.productId);
+      if (productPrice) {
+        transactionData.total += (productPrice.price.toNumber() * item.quantity) - item.discount
+      }
+
     }
 
-    
-    const items = createTransactionDto.items?.map((createItemDto: CreateItemDto)=>({
-      quantity: createItemDto.quantity,
-      discount: createItemDto.discount,
-      productId: createItemDto.productId,
-      serviceId: createItemDto.serviceId
-    }));
-
-    return await this.prismaService.transaction.create({
-      data:{
-        ...transactionData,
-        items: {
+  });
+  return await this.prismaService.transaction.create({
+    data: {
+      ...transactionData,
+      items: {
         create: items
-        }
       }
-    });
-  }
+    }
+  });
+}
+
 
   async findAll(): Promise<Transaction[]> {
     return await this.prismaService.transaction.findMany({
