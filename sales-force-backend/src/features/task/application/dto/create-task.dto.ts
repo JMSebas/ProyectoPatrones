@@ -21,7 +21,6 @@ export class CreateTaskDto {
   
     @ValidateNested({each: true})
     @Type(()=> CreateCommentDto)
-    @IsString()
     @IsOptional()
     comment: CreateCommentDto;
 

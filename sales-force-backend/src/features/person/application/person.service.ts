@@ -113,6 +113,12 @@ export class PersonService implements PersonServiceInterface {
         email: true,
         birthDate: true,
         locationId: true,
+        location: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
         employee: true,
         createdAt: true,
         updateAt: true
@@ -136,6 +142,12 @@ export class PersonService implements PersonServiceInterface {
         email: true,
         birthDate: true,
         locationId: true,
+        location: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
         consumer: true,
         createdAt: true,
         updateAt: true
