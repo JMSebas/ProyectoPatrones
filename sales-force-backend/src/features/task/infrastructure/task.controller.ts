@@ -16,8 +16,8 @@ export class TaskController {
     return this.taskService.create(createTaskDto);
   }
 
-  // @UseGuards(RolesGuard)
-  // @Roles('supervisor, admin')
+  @UseGuards(RolesGuard)
+  @Roles('supervisor, admin, director')
   @Get()
   findAll() {
     return this.taskService.findAll();
