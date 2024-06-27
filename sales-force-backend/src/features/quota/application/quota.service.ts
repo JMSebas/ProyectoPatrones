@@ -25,13 +25,20 @@ constructor(readonly prismaService: PrismaService){}
   }
 
   async findAll(): Promise<Quota []> {
-    return await this.prismaService.quota.findMany();
+    return await this.prismaService.quota.findMany({
+      include: {
+        employee: true
+      }
+    });
   }
 
   async findOne(id: number): Promise<Quota | null> {
     return await this.prismaService.quota.findUnique({
       where:{
         id
+      },
+      include: {
+        employee: true
       }
     });
   }

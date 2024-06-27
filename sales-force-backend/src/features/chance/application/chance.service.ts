@@ -24,7 +24,45 @@ export class ChanceService implements ChanceInterfaceService {
   }
 
   async findAll(): Promise<Chance[]> {
-    return await this.prismaService.chance.findMany();
+    return await this.prismaService.chance.findMany({
+      include: {
+        delegation: {
+          select: {
+            id: true,
+            employeeId: true,
+            consumerId: true,
+            employee: {
+              select: {
+                id: true,
+                username: true,
+                role: true,
+                person: {
+                  select: {
+                    dni: true,
+                    firstName: true,
+                    lastName: true
+                  }
+                }
+              }
+            },
+            consumer: {
+              select: {
+                id: true,
+                isCustomer: true,
+                type: true,
+                person: {
+                  select: {
+                    dni: true,
+                    firstName: true,
+                    lastName: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
   }
 
   async findOne(id: number): Promise<Chance | null> {
