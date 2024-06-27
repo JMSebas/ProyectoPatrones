@@ -51,11 +51,7 @@ export class ConsumerService implements ConsumerInterfaceService {
             birthDate: updateConsumerDto.person.birthDate,
             dni: updateConsumerDto.person.dni,
             gender: updateConsumerDto.person.gender,
-            location: {
-              update: {
-                name: updateConsumerDto.location.name,
-              },
-            },
+            locationId: updateConsumerDto.person.locationId,
           },
         },
       },

@@ -23,9 +23,4 @@ export class UpdateEmployeeDto extends PartialType(CreateEmployeeDto) {
   @Type(() => CreatePersonDto)
   @IsOptional()
   person: CreatePersonDto;
-
-  @ValidateNested({ each: true })
-  @Type(() => CreateLocationDto)
-  @IsOptional()
-  location: CreateLocationDto;
 }

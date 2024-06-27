@@ -40,6 +40,9 @@ export class EmployeeService implements EmployeeInterfaceService {
     id: number,
     updateEmployeeDto: UpdateEmployeeDto,
   ): Promise<Employee> {
+    console.log(updateEmployeeDto);
+
+    
     return await this.prismaService.employee.update({
       where: {
         id,
@@ -57,11 +60,6 @@ export class EmployeeService implements EmployeeInterfaceService {
             birthDate: updateEmployeeDto.person.birthDate,
             dni: updateEmployeeDto.person.dni,
             gender: updateEmployeeDto.person.gender,
-            location: {
-              update: {
-                name: updateEmployeeDto.location.name,
-              },
-            },
           },
         },
       },

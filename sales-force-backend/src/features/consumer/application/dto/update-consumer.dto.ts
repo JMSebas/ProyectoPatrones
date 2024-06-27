@@ -18,9 +18,4 @@ export class UpdateConsumerDto {
   @Type(() => CreatePersonDto)
   @IsOptional()
   person: CreatePersonDto;
-
-  @ValidateNested({ each: true })
-  @Type(() => CreateLocationDto)
-  @IsOptional()
-  location: CreateLocationDto;
 }
