@@ -26,9 +26,22 @@ constructor(readonly prismaService: PrismaService){}
 
   async findAll(): Promise<Quota []> {
     return await this.prismaService.quota.findMany({
-      include: {
-        employee: true
-      }
+      include:{
+        employee: {
+          select: {
+            id: true,
+            username: true,
+            role: true,
+            person:  {
+                select:{
+                  dni: true,
+                  firstName: true,
+                  lastName: true
+                }
+              }
+            }
+          }, 
+        }
     });
   }
 
